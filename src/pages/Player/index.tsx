@@ -1,42 +1,38 @@
-import { withFormik } from 'formik';
-import React from 'react'
-import Form from '../../components/Form';
-import { IFormPlayer } from '../../interfaces/player';
-import validationPlayerSchema from '../../validationSchema/player';
-import StylesPlayers from '../Players/styles'
+import { withFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Form from "../../components/Form";
+import { IFormPlayer } from "../../interfaces/player";
+import { saveService } from "../../services/player";
+import toBase64 from "../../utils/convertFile";
+import validationPlayerSchema from "../../validationSchema/player";
+import StylesPlayers from "../Players/styles";
 
 const Player = () => {
-
-  const initialValues = {
-    name: '',
+  const params = useParams();
+  const [initialValues, setInitialValues] = useState<IFormPlayer>({
+    name: "",
     age: 18,
     isInjured: false,
-    image: ''
-  } as IFormPlayer
+    image: null,
+  });
+
+  // useEffect(() => {
+
+  // }, [params])
 
   const MyForm = withFormik({
-    mapPropsToValues: () => (initialValues),
-  
-    // Custom sync validation
-    // validate: values => {
-    //   const errors = {} as any;
-  
-    //   if (!values.name) {
-    //     errors.name = 'Required';
-    //   }
-  
-    //   return errors;
-    // },
-  
-    handleSubmit: (values, { setSubmitting }) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        setSubmitting(false);
-      }, 1000);
+    mapPropsToValues: () => initialValues,
+
+    handleSubmit: async (values) => {
+      if(values.image) {
+        const respConvert = await toBase64(values.image) as string
+        const resp = await saveService({...values, image: respConvert});
+        if(resp) window.location.href = '/'
+      }
     },
 
-  validationSchema: validationPlayerSchema
-
+    validationSchema: validationPlayerSchema,
   })(Form);
 
   return (
@@ -48,7 +44,7 @@ const Player = () => {
         <MyForm />
       </StylesPlayers.Wrapper>
     </>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;

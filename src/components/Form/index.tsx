@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import S from "./styles";
 import { FormikProps } from "formik";
 import { IFormPlayer } from "../../interfaces/player";
 import classNames from "classnames";
 
 const Form = (props: FormikProps<IFormPlayer>) => {
+  const [previewImage, setPreviewImage] = useState<string>("");
+
   const {
     values,
     errors,
@@ -15,10 +17,31 @@ const Form = (props: FormikProps<IFormPlayer>) => {
     isSubmitting,
   } = props;
 
-  console.log(props);
+  const onChangeImage = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const file = URL.createObjectURL(ev.target.files![0]);
+    if (file) setPreviewImage(file);
+    values.image = ev.target.files![0];
+    return ev;
+  };
 
   return (
     <S.FormWrapper onSubmit={handleSubmit}>
+      <S.RowInput>
+        {!!previewImage.length && <img className="image" src={previewImage} />}
+        <S.Input
+          htmlFor="image"
+          className={classNames({
+            error: !!errors.image,
+          })}
+        >
+          {!previewImage.length && "Selecione uma imagem:"}
+          <input type="file" id="image" name="image" onChange={onChangeImage} />
+        </S.Input>
+        {errors.image && touched.image && (
+          <S.ErrorMessage>{errors.image}</S.ErrorMessage>
+        )}
+      </S.RowInput>
+
       <S.RowInput>
         <S.Input
           htmlFor="name"
@@ -90,10 +113,13 @@ const Form = (props: FormikProps<IFormPlayer>) => {
       <S.RowInput>
         <S.ButtonSubmit
           type="submit"
-         className={classNames({
-          disabled: !!errors || isSubmitting,
-        })}
-        >Salvar</S.ButtonSubmit>
+          // disabled={!previewImage.length && Object.values(values).length > 0}
+          // className={classNames({
+          //   disabled: !previewImage.length && Object.values(values).length > 0,
+          // })}
+        >
+          Salvar
+        </S.ButtonSubmit>
       </S.RowInput>
     </S.FormWrapper>
   );

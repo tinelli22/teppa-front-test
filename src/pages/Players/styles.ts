@@ -55,6 +55,12 @@ const PlayerItem = styled.div`
     font-size: 0.875rem;
     background: #fff;
     border-radius: 4px;
+
+    #image {
+        border-radius: 100%;
+        width: 40px;
+        height: 40px;
+    }
 `
 
 

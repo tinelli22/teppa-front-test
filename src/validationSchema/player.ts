@@ -10,7 +10,7 @@ const validationPlayerSchema = yup.object().shape({
     .min(16, "Mínimo 16 anos")
     .max(99, "Máximo 99 anos"),
     image: yup.mixed()
-    .required("Adicione uma imagem"),
+    .required("Adicione a imagem"),
     isInjured: yup.boolean()
     .required()
 })

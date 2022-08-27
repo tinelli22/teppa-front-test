@@ -46,6 +46,12 @@ const Input = styled.label`
 const RowInput = styled.div`
     display: flex;
     flex-direction: column;
+
+    .image {
+       
+        max-width: 120px;
+        max-height: 120px;
+    }
 `
 
 const ErrorMessage = styled.span`

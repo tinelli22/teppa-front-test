@@ -6,4 +6,6 @@ export interface IPlayer {
     isInjured: boolean
 }
 
-export interface IFormPlayer extends Omit<IPlayer, "id">{}
+export interface IFormPlayer extends Omit<IPlayer, "id" | 'image'>{
+    image: Blob | null
+}

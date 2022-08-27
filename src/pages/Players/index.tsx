@@ -33,6 +33,7 @@ const Players = () => {
         <S.Row className="list">
           {players.map((p, index) => (
             <S.PlayerItem key={index}>
+              <img id="image" src={p.image}  />
               <span id="name">{p.name}</span>
               <span id="status">{p.isInjured ? "Lesionado" : "OK"}</span>
               <S.Row className="player-item-actions">
