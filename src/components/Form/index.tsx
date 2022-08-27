@@ -5,8 +5,6 @@ import { IFormPlayer } from "../../interfaces/player";
 import classNames from "classnames";
 
 const Form = (props: FormikProps<IFormPlayer>) => {
-  const [previewImage, setPreviewImage] = useState<string>("");
-
   const {
     values,
     errors,
@@ -16,25 +14,30 @@ const Form = (props: FormikProps<IFormPlayer>) => {
     handleSubmit,
     isSubmitting,
   } = props;
+  const { image } = values
+
+  const [previewImage, setPreviewImage] = useState<Blob | undefined>(image);
+
 
   const onChangeImage = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const file = URL.createObjectURL(ev.target.files![0]);
-    if (file) setPreviewImage(file);
-    values.image = ev.target.files![0];
+    const val = ev.target.files![0];
+    setPreviewImage(val);
+
+    values.image = val;
     return ev;
   };
 
   return (
     <S.FormWrapper onSubmit={handleSubmit}>
       <S.RowInput>
-        {!!previewImage.length && <img className="image" src={previewImage} />}
+        {previewImage && <img className="image" src={URL.createObjectURL(previewImage)} />}
         <S.Input
           htmlFor="image"
           className={classNames({
             error: !!errors.image,
           })}
         >
-          {!previewImage.length && "Selecione uma imagem:"}
+          {!previewImage && "Selecione uma imagem:"}
           <input type="file" id="image" name="image" onChange={onChangeImage} />
         </S.Input>
         {errors.image && touched.image && (

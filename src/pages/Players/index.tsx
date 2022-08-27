@@ -1,17 +1,30 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IPlayer } from "../../interfaces/player";
-import { getAllService } from "../../services/player";
+import { deleteService, getAllService } from "../../services/player";
 import S from "./styles";
 
 const Players = () => {
   const [players, setPlayers] = useState<IPlayer[]>([]);
-
+  const navigate = useNavigate();
+  
   const getAll = useCallback(async () => {
     const resp = await getAllService();
     if (!resp) return;
     setPlayers(resp);
   }, []);
+
+  const onDelete = useCallback(async (id: string) => {
+    const resp = await deleteService(id)
+    if(resp) getAll()
+  }, [players])
+
+  const onEdit = useCallback(async (data: IPlayer) => {
+    navigate(`/${data.id!}`, {
+      state: data
+    })
+  }, [players])
+  
 
   useEffect(() => {
     getAll();
@@ -37,8 +50,8 @@ const Players = () => {
               <span id="name">{p.name}</span>
               <span id="status">{p.isInjured ? "Lesionado" : "OK"}</span>
               <S.Row className="player-item-actions">
-                <span>Editar</span>
-                <span>Remover</span>
+                <span id="option" onClick={() => onEdit(p)}>Editar</span>
+                <span id="option" onClick={() => onDelete(p.id!)}>Remover</span>
               </S.Row>
             </S.PlayerItem>
           ))}

@@ -35,12 +35,20 @@ const Button = styled.button`
 
 const Row = styled.div`
    display: flex;
-   align-items: center;
+   flex-wrap: wrap;
+   gap: 1rem;
 
-   &.list {
-    flex-wrap: wrap;
-    gap: 2rem;
-   }
+  .player-item-actions {
+    font-size: 0.625rem;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0 0 0 auto;
+
+    #option {
+        cursor: pointer;
+    }
+  }
 `
 const Col = styled.div`
    display: flex;
@@ -49,17 +57,24 @@ const Col = styled.div`
 
 const PlayerItem = styled.div`
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     min-height: 5rem;
-    width: auto;
     font-size: 0.875rem;
     background: #fff;
     border-radius: 4px;
+    padding: 0 1rem;
+    background: #f1f1f1;
+    width: 48%;
 
     #image {
         border-radius: 100%;
         width: 40px;
         height: 40px;
+    }
+
+    #name {
+        font-weight: 800;
     }
 `
 

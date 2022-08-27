@@ -5,4 +5,12 @@ const toBase64 = (file: Blob) => new Promise((resolve, reject) => {
     reader.onerror = error => reject(error);
 });
 
+export const toBlob = (file: string) => new Promise(async (resolve, reject) => {
+    const resp = await fetch(file);
+    const blobValue = await resp.blob();
+    if(!blobValue)  reject(null);
+
+   resolve(blobValue)
+})
+
 export default toBase64

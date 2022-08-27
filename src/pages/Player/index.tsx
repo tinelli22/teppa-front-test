@@ -1,25 +1,39 @@
 import { withFormik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import Form from "../../components/Form";
 import { IFormPlayer } from "../../interfaces/player";
 import { saveService } from "../../services/player";
-import toBase64 from "../../utils/convertFile";
+import toBase64, { toBlob } from "../../utils/convertFile";
 import validationPlayerSchema from "../../validationSchema/player";
 import StylesPlayers from "../Players/styles";
 
+
 const Player = () => {
-  const params = useParams();
+  const { state } = useLocation()
+  
   const [initialValues, setInitialValues] = useState<IFormPlayer>({
     name: "",
     age: 18,
     isInjured: false,
-    image: null,
   });
+  
+  const setValues = useCallback(async () => {
+    if(state) {
+      const { image, ...rest } =  state as any
+      const resp = await toBlob(image);
 
-  // useEffect(() => {
+      setInitialValues({...rest, image: resp})
+    }
+    else Navigate({ to: "/"})
 
-  // }, [params])
+  }, [state])
+
+  useEffect(() => {
+    setValues()
+  }, [setValues])
+
+  
 
   const MyForm = withFormik({
     mapPropsToValues: () => initialValues,
